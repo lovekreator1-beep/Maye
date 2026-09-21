@@ -1063,9 +1063,14 @@ document.addEventListener('DOMContentLoaded', () => {
   let cassettePhysicsMode = 'idle';
 
   function getCassetteSize() {
+    // Usamos el tamaño VISUAL real.
+    // Esto mantiene correctos los límites del arrastre aunque
+    // el cassette esté reducido con CSS zoom en celulares.
+    const rect = miniCassette.getBoundingClientRect();
+
     return {
-      width: miniCassette.offsetWidth,
-      height: miniCassette.offsetHeight
+      width: rect.width,
+      height: rect.height
     };
   }
 
