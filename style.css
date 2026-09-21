@@ -4348,3 +4348,115 @@
     transition-duration: .01ms !important;
   }
 }
+
+/* ==========================================================
+   V33 — APERTURA SIN SALTO LATERAL
+   SOLO PÁGINA 1.
+   NO TOCA CASETE, PÁGINA 6 NI PÁGINA 7.
+   ========================================================== */
+
+/*
+  IMPORTANTE:
+  `envelope-clean` NO cambia:
+  - width
+  - height
+  - left / right / top / bottom
+  - transform de la hoja
+  - posición del contenedor
+
+  Únicamente hace desaparecer las piezas del sobre.
+*/
+
+#opening .love-envelope.envelope-clean .env-back,
+#opening .love-envelope.envelope-clean .env-front,
+#opening .love-envelope.envelope-clean .env-bottom,
+#opening .love-envelope.envelope-clean .env-flap,
+#opening .love-envelope.envelope-clean .env-sprig,
+#opening .love-envelope.envelope-clean .env-hint,
+#opening .love-envelope.envelope-clean .env-seal {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/*
+  Nada se desplaza mientras desaparece el sobre.
+  Solo opacity.
+*/
+#opening .love-envelope.envelope-clean .env-back,
+#opening .love-envelope.envelope-clean .env-front,
+#opening .love-envelope.envelope-clean .env-bottom,
+#opening .love-envelope.envelope-clean .env-flap,
+#opening .love-envelope.envelope-clean .env-sprig,
+#opening .love-envelope.envelope-clean .env-hint,
+#opening .love-envelope.envelope-clean .env-seal {
+  transition:
+    opacity .24s ease
+    !important;
+}
+
+/*
+  La hoja conserva EXACTAMENTE la misma geometría de is-open
+  antes, durante y después de que desaparece el sobre.
+*/
+#opening .love-envelope.envelope-clean .env-letter {
+  position: absolute !important;
+
+  left: 50% !important;
+  right: auto !important;
+  top: 50% !important;
+  bottom: auto !important;
+
+  width: min(610px, calc(100vw - 42px)) !important;
+
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: min(455px, calc(100dvh - 135px)) !important;
+
+  margin: 0 !important;
+
+  opacity: 1 !important;
+
+  transform:
+    translate3d(-50%, -50%, 0)
+    scale(1)
+    !important;
+
+  transform-origin: center center !important;
+
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+
+  box-shadow:
+    0 15px 30px rgba(61,46,43,.12)
+    !important;
+
+  scrollbar-width: none !important;
+}
+
+#opening .love-envelope.envelope-clean .env-letter::-webkit-scrollbar {
+  display: none !important;
+}
+
+#opening .love-envelope.envelope-clean .env-letter-content {
+  opacity: 1 !important;
+  transform: translate3d(0, 0, 0) !important;
+}
+
+
+/* Móvil: misma posición; solo adapta ancho/padding como en V32. */
+@media (max-width: 640px) {
+
+  #opening .love-envelope.envelope-clean .env-letter {
+    width: min(92vw, 610px) !important;
+
+    max-height:
+      calc(100dvh - 118px)
+      !important;
+
+    padding:
+      clamp(17px, 4.6vw, 23px)
+      clamp(17px, 5.2vw, 22px)
+      clamp(16px, 4.5vw, 22px)
+      !important;
+  }
+}

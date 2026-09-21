@@ -636,7 +636,7 @@ let isPlaying = false;
     }
 
     function openEnvelope() {
-      if (!loveEnvelope || envelopeOpen || loveEnvelope.classList.contains('letter-only')) return;
+      if (!loveEnvelope || envelopeOpen) return;
 
       envelopeOpen = true;
 
@@ -703,10 +703,16 @@ let isPlaying = false;
         */
       }
 
-      // Después de que la hoja llegó al centro,
-      // solo desaparecen las piezas del sobre.
+      /*
+        Después de que la hoja llegó al centro,
+        SOLO ocultamos visualmente las piezas del sobre.
+
+        No usamos `letter-only` porque esa clase tiene estilos
+        históricos que modifican ancho/posición de la hoja y
+        provocaban el salto lateral.
+      */
       setTimeout(() => {
-        loveEnvelope.classList.add('letter-only');
+        loveEnvelope.classList.add('envelope-clean');
       }, 820);
 
       triggerSecretToast('para vos ♡');
