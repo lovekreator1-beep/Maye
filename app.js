@@ -1034,7 +1034,7 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ----------------------------------------------------------
      CASETE ARRASTRABLE — FÍSICA GPU / MÁS PESADA
      ---------------------------------------------------------- */
-  const CASSETTE_POS_KEY = 'maye-mini-cassette-position-v1';
+  const CASSETTE_POS_KEY = 'maye-mini-cassette-position-v2';
 
   let cassetteDragging = false;
   let cassetteMoved = false;
@@ -1063,9 +1063,9 @@ document.addEventListener('DOMContentLoaded', () => {
   let cassettePhysicsMode = 'idle';
 
   function getCassetteSize() {
-    // Usamos el tamaño VISUAL real.
-    // Esto mantiene correctos los límites del arrastre aunque
-    // el cassette esté reducido con CSS zoom en celulares.
+    // Tamaño visual real del cassette.
+    // CSS zoom reduce el objeto completo y estas medidas
+    // mantienen correctos los límites del arrastre.
     const rect = miniCassette.getBoundingClientRect();
 
     return {
@@ -1239,7 +1239,11 @@ document.addEventListener('DOMContentLoaded', () => {
         0.38 da un pequeño retraso agradable.
         Antes seguía el mouse 1:1 y se sentía liviano.
       */
-      const follow = .38;
+      /*
+        Sigue la mano con suavidad, pero sin el retraso visible
+        que se sentía como lag en celulares.
+      */
+      const follow = .62;
 
       cassetteVisualX +=
         (cassetteTargetX - cassetteVisualX) * follow;
