@@ -3393,3 +3393,401 @@
     font-size: 8px !important;
   }
 }
+
+/* ==========================================================
+   MOBILE VISUAL V24
+   Ajuste visual SOLO para celular.
+   Corrige páginas 6 y 7, navegación y casete.
+   ========================================================== */
+
+@media (max-width: 760px), (pointer: coarse) {
+
+  /* --------------------------------------------------------
+     CASETE: pequeño y discreto
+     -------------------------------------------------------- */
+  .mini-cassette,
+  .mini-cassette-real,
+  .mini-cassette.mini-cassette-real {
+    width: 104px !important;
+    max-width: 104px !important;
+    padding: 4px !important;
+    border-radius: 7px !important;
+    box-shadow: 0 5px 12px rgba(40,31,31,.14) !important;
+  }
+
+  .mini-cassette__paper {
+    padding: 4px !important;
+    border-radius: 4px !important;
+  }
+
+  .mini-cassette__top {
+    min-height: 13px !important;
+    margin-bottom: 2px !important;
+  }
+
+  .mini-cassette__top span,
+  .mini-cassette__song,
+  .mini-cassette__artist,
+  .mini-cassette__time {
+    line-height: 1 !important;
+  }
+
+  .mini-cassette__song {
+    font-size: 7px !important;
+  }
+
+  .mini-cassette__artist {
+    font-size: 6px !important;
+  }
+
+  .mini-cassette__window {
+    min-height: 29px !important;
+    padding: 3px !important;
+    grid-template-columns: 19px 1fr 19px !important;
+    gap: 3px !important;
+    border-radius: 4px !important;
+  }
+
+  .mini-reel {
+    width: 18px !important;
+    height: 18px !important;
+  }
+
+  .mini-cassette__controls {
+    min-height: 20px !important;
+    padding-top: 2px !important;
+  }
+
+  .mini-cassette button {
+    transform: scale(.58) !important;
+    transform-origin: center !important;
+  }
+
+  .cassette-sync-button {
+    display: none !important;
+  }
+
+
+  /* --------------------------------------------------------
+     NAVEGACIÓN INFERIOR: más delicada
+     -------------------------------------------------------- */
+  .section-nav {
+    min-width: 0 !important;
+    width: auto !important;
+    gap: 5px !important;
+    padding: 4px 7px !important;
+    border-radius: 999px !important;
+    background: rgba(255,253,249,.92) !important;
+    border: 1px solid rgba(126,56,69,.08) !important;
+    box-shadow: 0 4px 10px rgba(61,46,43,.07) !important;
+  }
+
+  .section-nav-arrow {
+    width: 27px !important;
+    height: 27px !important;
+    min-width: 27px !important;
+    min-height: 27px !important;
+    font-size: 11px !important;
+    border: none !important;
+  }
+
+  .section-dots {
+    gap: 3px !important;
+  }
+
+  .section-dot {
+    width: 4px !important;
+    height: 4px !important;
+    min-width: 4px !important;
+    min-height: 4px !important;
+    opacity: .65;
+  }
+
+  .section-dot.active {
+    width: 13px !important;
+    height: 4px !important;
+    min-width: 13px !important;
+    border-radius: 999px !important;
+    opacity: 1;
+  }
+
+
+  /* ========================================================
+     PÁGINA 6 — MEMORIES
+     ======================================================== */
+
+  #memories {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    overflow: hidden !important;
+
+    padding-top: 56px !important;
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+    padding-bottom: 58px !important;
+  }
+
+  #memories > .text-center {
+    margin: 0 auto 16px !important;
+    flex: 0 0 auto !important;
+  }
+
+  #memories > .text-center h3 {
+    font-size: 30px !important;
+    line-height: .98 !important;
+    white-space: normal !important;
+  }
+
+  #memories > .text-center p {
+    margin-top: 3px !important;
+    font-size: 15px !important;
+  }
+
+  #memories > .grid {
+    width: min(100%, 360px) !important;
+    height: auto !important;
+    flex: 0 0 auto !important;
+    margin: 0 auto !important;
+
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    grid-template-rows: auto auto !important;
+    gap: 18px 14px !important;
+
+    align-items: start !important;
+    justify-items: center !important;
+  }
+
+  #memories > .grid > .deckled-paper {
+    width: 100% !important;
+    max-width: 164px !important;
+    height: auto !important;
+    min-height: 0 !important;
+
+    margin: 0 !important;
+    padding: 7px 7px 10px !important;
+
+    transform: none !important;
+    align-self: start !important;
+  }
+
+  #memories > .grid > .deckled-paper > div[class*="h-56"] {
+    width: 100% !important;
+    aspect-ratio: 1 / 1 !important;
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  #memories > .grid > .deckled-paper img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+
+  #memories > .grid > .deckled-paper p {
+    min-height: 0 !important;
+    height: auto !important;
+
+    margin: 7px 2px 0 !important;
+
+    display: block !important;
+
+    font-size: 13px !important;
+    line-height: 1.02 !important;
+    text-align: center !important;
+  }
+
+  #memories > .grid > .deckled-paper span[class*="font-mono"] {
+    font-size: 7px !important;
+    padding: 2px 4px !important;
+  }
+
+  #memories .page-bear-gif--heart {
+    width: 44px !important;
+    max-width: 44px !important;
+    right: 4% !important;
+    top: 8% !important;
+  }
+
+
+  /* ========================================================
+     PÁGINA 7 — LITTLE THINGS
+     Tarjetas dejan de ocupar toda la pantalla.
+     ======================================================== */
+
+  #little-things {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+
+    overflow: hidden !important;
+
+    padding-top: 54px !important;
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+    padding-bottom: 58px !important;
+  }
+
+  #little-things > .text-center {
+    flex: 0 0 auto !important;
+    margin: 0 auto 15px !important;
+    max-width: 340px !important;
+  }
+
+  #little-things > .text-center h3 {
+    max-width: 330px !important;
+    margin: 0 auto !important;
+
+    font-size: 27px !important;
+    line-height: .96 !important;
+  }
+
+  #little-things > .text-center p {
+    margin-top: 5px !important;
+    font-size: 14px !important;
+    line-height: 1 !important;
+  }
+
+  #little-things > .grid {
+    width: min(100%, 390px) !important;
+    height: auto !important;
+    flex: 0 0 auto !important;
+
+    margin: 0 auto !important;
+
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0,1fr)) !important;
+    grid-template-rows: repeat(3, auto) !important;
+
+    gap: 10px !important;
+  }
+
+  #little-things .note-card {
+    height: 118px !important;
+    min-height: 118px !important;
+    max-height: 118px !important;
+
+    padding: 13px 12px !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+
+    overflow: hidden !important;
+
+    transform: none !important;
+  }
+
+  #little-things .note-card > p:first-of-type {
+    margin: 0 !important;
+
+    font-size: 19px !important;
+    line-height: .98 !important;
+  }
+
+  #little-things .note-card > p:nth-of-type(2) {
+    margin-top: 5px !important;
+
+    font-size: 10px !important;
+    line-height: 1.15 !important;
+
+    opacity: .72;
+  }
+
+  #little-things .hidden-secret {
+    left: 10px !important;
+    right: 10px !important;
+    bottom: 9px !important;
+
+    padding-top: 5px !important;
+
+    font-size: 13px !important;
+    line-height: 1 !important;
+  }
+
+  #little-things .note-card.is-revealed > p:nth-of-type(2) {
+    opacity: .08 !important;
+  }
+
+  #little-things .washi-tape,
+  #little-things .washi-rose {
+    width: 30px !important;
+    height: 7px !important;
+  }
+}
+
+
+/* Teléfonos angostos */
+@media (max-width: 380px) {
+
+  #memories > .grid {
+    gap: 13px 10px !important;
+  }
+
+  #memories > .grid > .deckled-paper {
+    max-width: 150px !important;
+  }
+
+  #memories > .grid > .deckled-paper p {
+    font-size: 12px !important;
+  }
+
+  #little-things .note-card {
+    height: 108px !important;
+    min-height: 108px !important;
+    max-height: 108px !important;
+    padding: 11px 10px !important;
+  }
+
+  #little-things .note-card > p:first-of-type {
+    font-size: 17px !important;
+  }
+
+  #little-things .note-card > p:nth-of-type(2) {
+    font-size: 9px !important;
+  }
+}
+
+
+/* Teléfonos bajos: reducimos un poco sin destruir el diseño */
+@media (max-width: 760px) and (max-height: 740px) {
+
+  #memories {
+    padding-top: 46px !important;
+  }
+
+  #memories > .text-center {
+    margin-bottom: 9px !important;
+  }
+
+  #memories > .grid {
+    gap: 10px !important;
+  }
+
+  #memories > .grid > .deckled-paper {
+    max-width: 142px !important;
+  }
+
+  #little-things {
+    padding-top: 46px !important;
+  }
+
+  #little-things > .text-center {
+    margin-bottom: 8px !important;
+  }
+
+  #little-things .note-card {
+    height: 96px !important;
+    min-height: 96px !important;
+    max-height: 96px !important;
+  }
+
+  #little-things .note-card > p:first-of-type {
+    font-size: 16px !important;
+  }
+
+  #little-things .note-card > p:nth-of-type(2) {
+    font-size: 8px !important;
+  }
+}
