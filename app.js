@@ -388,10 +388,16 @@ let isPlaying = false;
 // Reveal Secret on interactive sticky notes
     function revealNoteSecret(card, secretText) {
       const secretBox = card.querySelector('.hidden-secret');
+
       if (secretBox) {
         secretBox.textContent = secretText;
         secretBox.classList.remove('hidden');
-        card.classList.add('border-dusty-rose');
+
+        card.classList.add(
+          'border-dusty-rose',
+          'is-revealed'
+        );
+
         triggerSecretToast(secretText);
       }
     }
@@ -433,15 +439,18 @@ let isPlaying = false;
       }, (duration + delay) * 1000);
     }
 
-    // Menos partículas simultáneas en móvil para conservar FPS.
-    const initialPetals = MOBILE_LIGHT_MODE ? 3 : 8;
-    const petalInterval = MOBILE_LIGHT_MODE ? 3200 : 1650;
+    // En móvil quitamos las partículas ambientales permanentes.
+    // Las flores por clic y por música siguen funcionando.
+    if (!MOBILE_LIGHT_MODE) {
+      const initialPetals = 8;
+      const petalInterval = 1650;
 
-    for (let i = 0; i < initialPetals; i++) {
-      setTimeout(createPetal, i * (MOBILE_LIGHT_MODE ? 1100 : 800));
+      for (let i = 0; i < initialPetals; i++) {
+        setTimeout(createPetal, i * 800);
+      }
+
+      setInterval(createPetal, petalInterval);
     }
-
-    setInterval(createPetal, petalInterval);
 
     // Desktop Custom Cursor Trail
     if (window.matchMedia('(pointer: fine)').matches) {
@@ -525,20 +534,24 @@ let isPlaying = false;
         oldSection.classList.add('section-leave-left');
       }
 
+      const travel = MOBILE_LIGHT_MODE ? 14 : 42;
+
       newSection.style.transform = forward
-        ? 'translateX(42px) scale(.992)'
-        : 'translateX(-42px) scale(.992)';
+        ? `translate3d(${travel}px, 0, 0)`
+        : `translate3d(-${travel}px, 0, 0)`;
 
       requestAnimationFrame(() => {
-        newSection.classList.add('section-active');
-        newSection.scrollTop = 0;
-        newSection.style.transform = '';
+        requestAnimationFrame(() => {
+          newSection.classList.add('section-active');
+          newSection.scrollTop = 0;
+          newSection.style.transform = '';
+        });
       });
 
       setTimeout(() => {
         oldSection.classList.remove('section-leave-left');
         sectionLocked = false;
-      }, 650);
+      }, MOBILE_LIGHT_MODE ? 330 : 650);
 
       currentSection = index;
       updateSectionNav();
@@ -763,7 +776,7 @@ let isPlaying = false;
       flowerBurst(
         event.clientX,
         event.clientY,
-        event.pointerType === 'touch' ? 5 : 7
+        event.pointerType === 'touch' ? 3 : 7
       );
     });
 
@@ -901,7 +914,7 @@ function flowerBeatExplosion(strength = 1, beatIndex = 0) {
   // No hacemos 15 flores en CADA beat porque sería demasiado pesado.
   // Hay explosión en todos, pero unas son pequeñas.
   const amount = MOBILE_LIGHT_MODE
-    ? (strongBeat ? 6 : 3)
+    ? (strongBeat ? 4 : 2)
     : (strongBeat ? 10 : 5);
 
   flowerBurst(x, y, amount, false);
@@ -961,7 +974,7 @@ function monitorFlowerBeatGrid(timestamp = 0) {
   // No hace falta analizar audio 60 veces por segundo en un teléfono.
   if (
     MOBILE_LIGHT_MODE &&
-    timestamp - lastFlowerAnalysisFrame < 40
+    timestamp - lastFlowerAnalysisFrame < 48
   ) {
     return;
   }

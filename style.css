@@ -1,40 +1,97 @@
 
 /* ==========================================================
-   MOBILE V22 — rendimiento + páginas 4, 6 y 7 responsive
-   Pegá TODO este bloque al FINAL de style.css
+   MOBILE SMOOTH V23
+   PEGAR AL FINAL DE style.css
    ========================================================== */
 
 @media (max-width: 760px), (pointer: coarse) {
 
-  /* --------------------------------------------------------
-     RENDIMIENTO GENERAL
-     -------------------------------------------------------- */
+  /* ========================================================
+     1. RENDIMIENTO GENERAL
+     ======================================================== */
+
+  html,
+  body {
+    overscroll-behavior: none;
+  }
+
+  #romantic-main {
+    height: 100dvh !important;
+    overflow: hidden !important;
+  }
 
   #romantic-main > section {
-    padding: 58px 12px 76px !important;
-    transform: translateX(18px);
+    height: 100dvh !important;
+    min-height: 100dvh !important;
+
+    padding:
+      max(54px, env(safe-area-inset-top))
+      10px
+      max(68px, calc(env(safe-area-inset-bottom) + 58px))
+      !important;
+
+    overflow-x: hidden !important;
+
     transition:
-      opacity .34s ease,
-      transform .38s ease,
-      visibility .34s !important;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior: contain;
+      opacity .28s ease,
+      transform .32s cubic-bezier(.22,.72,.2,1),
+      visibility .28s !important;
+
+    transform: translate3d(14px,0,0) !important;
+
+    contain: layout paint;
+    -webkit-overflow-scrolling: auto !important;
   }
 
   #romantic-main > section.section-active {
-    transform: translateX(0) !important;
+    transform: translate3d(0,0,0) !important;
   }
 
   #romantic-main > section.section-leave-left {
-    transform: translateX(-18px) !important;
+    transform: translate3d(-14px,0,0) !important;
   }
 
-  /* Evitamos animar todos los hijos grandes al entrar. */
   #romantic-main > section.section-active > * {
-    animation-duration: .36s !important;
+    animation-duration: .28s !important;
   }
 
-  /* Blur en elementos fijos cuesta bastante en móviles. */
+  @keyframes sectionContentIn {
+    from {
+      opacity: 0;
+      transform: translate3d(0,8px,0);
+    }
+
+    to {
+      opacity: 1;
+      transform: translate3d(0,0,0);
+    }
+  }
+
+  /* Nada de pétalos ambientales permanentes en móvil. */
+  #petal-container {
+    display: none !important;
+  }
+
+  /* Las explosiones siguen, pero sin filtros costosos. */
+  .click-bloom {
+    filter: none !important;
+    text-shadow: none !important;
+    will-change: transform, opacity;
+  }
+
+  /* Fondos decorativos: sin filtros pesados */
+  .real-flower-png,
+  .page-bear-gif {
+    filter: none !important;
+  }
+
+  .deckled-paper {
+    box-shadow:
+      0 2px 5px rgba(61,46,43,.07),
+      0 7px 14px rgba(61,46,43,.035)
+      !important;
+  }
+
   .section-nav,
   .section-counter,
   .site-flower-logo {
@@ -42,328 +99,438 @@
     -webkit-backdrop-filter: none !important;
   }
 
-  .section-nav {
-    bottom: max(8px, env(safe-area-inset-bottom)) !important;
-    box-shadow: 0 5px 15px rgba(61,46,43,.10) !important;
-  }
-
-  /* Sombras simplificadas solo en móvil. */
-  .deckled-paper {
-    box-shadow:
-      0 2px 6px rgba(61,46,43,.07),
-      0 8px 18px rgba(61,46,43,.045) !important;
-  }
-
-  .washi-tape,
-  .washi-rose {
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-  }
-
-  /* Los GIFs siguen con animación infinita,
-     pero solo transform: nada de filtros pesados. */
-  .page-bear-gif {
-    filter: none !important;
-    will-change: transform !important;
-  }
-
-  .petal-particle,
-  .click-bloom {
-    box-shadow: none !important;
-    filter: none !important;
-  }
-
-  /* Hover no tiene sentido en touch y puede quedar "pegado". */
-  #memories .deckled-paper:hover,
-  #little-things .note-card:hover {
-    transform: none !important;
-  }
-
 
   /* ========================================================
-     PÁGINA 4 — LOVE LETTER
+     2. NAVEGACIÓN — "BURBUJAS" MÁS LIMPIAS
      ======================================================== */
 
-  #letter {
-    justify-content: center !important;
+  .section-nav {
+    bottom: max(7px, env(safe-area-inset-bottom)) !important;
+
+    gap: 7px !important;
+    padding: 5px 8px !important;
+
+    border-radius: 22px !important;
+
+    background: rgba(255,253,249,.97) !important;
+    box-shadow: 0 5px 14px rgba(61,46,43,.09) !important;
   }
 
-  #letter > .deckled-paper {
-    width: min(94vw, 610px) !important;
-    padding: 22px 19px 19px !important;
-    transform: none !important;
+  .section-nav-arrow {
+    width: 30px !important;
+    height: 30px !important;
+    font-size: 13px !important;
+
+    background: transparent !important;
+    border-color: rgba(126,56,69,.12) !important;
   }
 
-  #letter .spring-letter-body {
-    font-size: clamp(13px, 3.55vw, 15px) !important;
-    line-height: 1.48 !important;
+  .section-dots {
+    gap: 4px !important;
   }
 
-  #letter .spring-letter-body > p {
-    margin-bottom: 11px !important;
+  .section-dot {
+    width: 4px !important;
+    height: 4px !important;
+
+    background: rgba(126,56,69,.22) !important;
+
+    transition:
+      width .22s ease,
+      background .22s ease
+      !important;
   }
 
-  #letter .spring-letter-greeting {
-    font-size: 27px !important;
-    margin-bottom: 11px !important;
+  .section-dot.active {
+    width: 14px !important;
+    height: 4px !important;
+    background: #c98a8a !important;
   }
 
-  #letter .spring-letter-signature {
-    margin-top: 13px !important;
-  }
+  .section-counter {
+    top: max(10px, env(safe-area-inset-top)) !important;
+    right: 10px !important;
 
-  /*
-    Pie de carta:
-    sticky de primavera a la izquierda,
-    PARA SIEMPRE siempre alineado a la derecha.
-  */
-  #letter .spring-letter-body + div {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) auto !important;
-    align-items: center !important;
-    gap: 10px !important;
-    width: 100% !important;
-    margin-top: 15px !important;
-    padding-top: 11px !important;
-  }
-
-  #letter .spring-letter-body + div > div {
-    min-width: 0 !important;
-    padding: 6px 9px !important;
-    justify-self: start !important;
-    max-width: 100% !important;
-  }
-
-  #letter .spring-letter-body + div > div span {
-    font-size: 14px !important;
-    line-height: 1.05 !important;
-  }
-
-  #letter .spring-letter-body + div > span:last-child {
-    justify-self: end !important;
-    align-self: center !important;
-    white-space: nowrap !important;
+    padding: 5px 9px !important;
     font-size: 9px !important;
-    letter-spacing: .10em !important;
-    margin: 0 !important;
+
+    background: rgba(255,253,249,.95) !important;
+    box-shadow: 0 3px 8px rgba(61,46,43,.05) !important;
   }
 
 
   /* ========================================================
-     PÁGINA 6 — OUR LITTLE MEMORIES
-     4 polaroids en 2 x 2.
+     3. CASETE — MENOS INVASIVO EN CELULAR
+     ======================================================== */
+
+  .mini-cassette,
+  .mini-cassette-real,
+  .mini-cassette.mini-cassette-real {
+    width: 126px !important;
+    max-width: 126px !important;
+
+    padding: 5px !important;
+    border-radius: 8px !important;
+
+    box-shadow:
+      0 7px 16px rgba(40,31,31,.16)
+      !important;
+  }
+
+  .mini-cassette__paper {
+    padding: 5px !important;
+  }
+
+  .mini-cassette__window {
+    min-height: 36px !important;
+    padding: 4px !important;
+
+    grid-template-columns: 24px 1fr 24px !important;
+    gap: 4px !important;
+  }
+
+  .mini-reel {
+    width: 22px !important;
+    height: 22px !important;
+  }
+
+  .mini-cassette__song {
+    font-size: 9px !important;
+  }
+
+  .mini-cassette__artist {
+    font-size: 7px !important;
+  }
+
+  .mini-cassette button {
+    transform: scale(.72);
+    transform-origin: center;
+  }
+
+  .cassette-sync-button {
+    font-size: 4px !important;
+    padding: 1px 3px !important;
+  }
+
+
+  /* ========================================================
+     4. PÁGINA 6 — SIN SCROLL
      ======================================================== */
 
   #memories {
+    overflow-y: hidden !important;
     justify-content: flex-start !important;
-    padding-top: 52px !important;
-    padding-bottom: 72px !important;
+
+    padding-top: 46px !important;
+    padding-bottom: 58px !important;
   }
 
   #memories > .text-center {
-    margin-bottom: 13px !important;
+    flex: 0 0 auto;
+    margin-bottom: 8px !important;
+  }
+
+  #memories > .text-center span {
+    font-size: 8px !important;
   }
 
   #memories > .text-center h3 {
-    font-size: 27px !important;
+    margin-top: 0 !important;
+
+    font-size: clamp(23px, 7vw, 27px) !important;
+    line-height: 1 !important;
   }
 
   #memories > .text-center p {
-    font-size: 16px !important;
+    margin-top: 2px !important;
+
+    font-size: 14px !important;
+    line-height: 1 !important;
   }
 
   #memories > .grid {
-    width: min(100%, 390px) !important;
+    width: min(100%, 370px) !important;
+    flex: 1 1 auto;
+
     margin: 0 auto !important;
 
     display: grid !important;
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 11px 9px !important;
+    grid-template-columns: repeat(2, minmax(0,1fr)) !important;
+    grid-template-rows: repeat(2, minmax(0,1fr)) !important;
 
-    align-items: start !important;
+    gap: 8px !important;
+
+    align-items: center !important;
     justify-items: center !important;
+
+    min-height: 0 !important;
   }
 
   #memories > .grid > .deckled-paper {
-    width: min(42vw, 168px) !important;
-    max-width: 168px !important;
+    width: min(43vw, 160px) !important;
+    max-width: 160px !important;
 
-    padding: 7px 7px 11px !important;
+    padding: 6px 6px 9px !important;
     margin: 0 !important;
 
     transform: none !important;
+
+    align-self: center;
   }
 
-  /* Caja de cada foto (antes h-56 = demasiado alta en celular) */
   #memories > .grid > .deckled-paper > div[class*="h-56"] {
-    height: clamp(118px, 34vw, 145px) !important;
+    height: clamp(
+      90px,
+      14.5dvh,
+      126px
+    ) !important;
   }
 
   #memories > .grid > .deckled-paper p {
-    margin-top: 7px !important;
-    min-height: 29px !important;
+    min-height: 22px !important;
 
-    font-size: 14px !important;
-    line-height: 1.04 !important;
+    margin-top: 5px !important;
+
+    font-size: clamp(11px,3.4vw,14px) !important;
+    line-height: 1 !important;
 
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
-  #memories > .grid > .deckled-paper span[class*="font-mono"] {
-    bottom: 4px !important;
-    right: 4px !important;
-    font-size: 7px !important;
+  #memories .washi-tape,
+  #memories .washi-rose {
+    width: 38px !important;
+    height: 8px !important;
   }
 
   #memories .page-bear-gif--heart {
-    width: 52px !important;
-    max-width: 52px !important;
+    width: 44px !important;
+    max-width: 44px !important;
+
+    top: 5% !important;
     right: 2% !important;
-    top: 7% !important;
   }
 
 
   /* ========================================================
-     PÁGINA 7 — LITTLE THINGS
-     6 tarjetas compactas en 2 columnas.
+     5. PÁGINA 7 — SIN SCROLL
      ======================================================== */
 
   #little-things {
+    overflow-y: hidden !important;
     justify-content: flex-start !important;
-    padding-top: 50px !important;
-    padding-bottom: 72px !important;
+
+    padding-top: 45px !important;
+    padding-bottom: 58px !important;
   }
 
   #little-things > .text-center {
-    margin-bottom: 12px !important;
+    flex: 0 0 auto;
+    margin-bottom: 8px !important;
+  }
+
+  #little-things > .text-center span {
+    font-size: 8px !important;
   }
 
   #little-things > .text-center h3 {
-    max-width: 300px !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
+    max-width: 310px !important;
 
-    font-size: 25px !important;
-    line-height: 1.04 !important;
+    margin: 0 auto !important;
+
+    font-size: clamp(22px,6.5vw,26px) !important;
+    line-height: 1 !important;
   }
 
   #little-things > .text-center p {
-    font-size: 15px !important;
-    margin-top: 3px !important;
+    margin-top: 2px !important;
+
+    font-size: 13px !important;
+    line-height: 1 !important;
   }
 
   #little-things > .grid {
-    width: min(100%, 410px) !important;
+    width: min(100%, 390px) !important;
+    flex: 1 1 auto;
+
     margin: 0 auto !important;
 
     display: grid !important;
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 10px !important;
+    grid-template-columns: repeat(2, minmax(0,1fr)) !important;
+    grid-template-rows: repeat(3, minmax(0,1fr)) !important;
+
+    gap: 7px !important;
+
+    min-height: 0 !important;
   }
 
   #little-things .note-card {
+    position: relative !important;
+
     min-width: 0 !important;
-    padding: 12px 11px 10px !important;
+    min-height: 0 !important;
+    height: 100% !important;
+
+    padding: 11px 9px 8px !important;
+
+    overflow: hidden !important;
+
     transform: none !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
 
     transition:
       transform .16s ease,
-      border-color .2s ease !important;
+      border-color .18s ease,
+      background .18s ease
+      !important;
   }
 
   #little-things .note-card:active {
-    transform: scale(.975) !important;
+    transform: scale(.98) !important;
   }
 
   #little-things .note-card > p:first-of-type {
-    font-size: clamp(18px, 5vw, 21px) !important;
-    line-height: .98 !important;
+    margin: 0 !important;
+
+    font-size: clamp(16px,4.4vw,20px) !important;
+    line-height: .95 !important;
   }
 
   #little-things .note-card > p:nth-of-type(2) {
     margin-top: 5px !important;
-    font-size: 10px !important;
-    line-height: 1.22 !important;
+
+    font-size: clamp(8px,2.4vw,10px) !important;
+    line-height: 1.15 !important;
+
+    transition: opacity .18s ease;
   }
 
+  /*
+    El secreto aparece SOBRE la tarjeta.
+    Ya no aumenta la altura ni crea scroll.
+  */
   #little-things .hidden-secret {
-    margin-top: 7px !important;
-    padding-top: 6px !important;
-    font-size: 14px !important;
-    line-height: 1.05 !important;
+    position: absolute !important;
+
+    left: 9px !important;
+    right: 9px !important;
+    bottom: 8px !important;
+
+    margin: 0 !important;
+    padding: 5px 0 0 !important;
+
+    font-size: clamp(11px,3vw,14px) !important;
+    line-height: 1 !important;
+
+    background:
+      linear-gradient(
+        to top,
+        rgba(255,253,249,.98) 74%,
+        rgba(255,253,249,.78)
+      );
+
+    transform: translateY(5px);
+    opacity: 0;
+
+    transition:
+      opacity .18s ease,
+      transform .18s ease
+      !important;
+  }
+
+  #little-things .hidden-secret:not(.hidden) {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+  }
+
+  #little-things .note-card.is-revealed > p:nth-of-type(2) {
+    opacity: .10 !important;
+  }
+
+  #little-things .note-card.is-revealed {
+    background: #fffdf9 !important;
   }
 
   #little-things .washi-tape,
   #little-things .washi-rose {
-    width: 38px !important;
-    height: 8px !important;
-  }
-}
-
-
-/* Teléfonos MUY angostos */
-@media (max-width: 350px) {
-  #memories > .grid {
-    gap: 8px 6px !important;
+    width: 32px !important;
+    height: 7px !important;
   }
 
-  #memories > .grid > .deckled-paper {
-    width: 43vw !important;
-    padding: 6px 6px 9px !important;
-  }
 
-  #little-things > .grid {
-    gap: 7px !important;
-  }
-
-  #little-things .note-card {
-    padding: 10px 9px 9px !important;
-  }
+  /* ========================================================
+     6. PÁGINA 4 — "PARA SIEMPRE"
+     ======================================================== */
 
   #letter .spring-letter-body + div {
-    grid-template-columns: 1fr !important;
+    display: grid !important;
+    grid-template-columns: minmax(0,1fr) auto !important;
+
+    align-items: center !important;
+
+    gap: 8px !important;
+
+    width: 100% !important;
+
+    margin-top: 12px !important;
+    padding-top: 10px !important;
   }
 
   #letter .spring-letter-body + div > span:last-child {
+    display: block !important;
     justify-self: end !important;
+    align-self: center !important;
+
+    margin: 0 !important;
+
+    white-space: nowrap !important;
+
+    font-size: 8px !important;
+    letter-spacing: .09em !important;
+    text-align: right !important;
   }
 }
-/* ==========================================
-   CASETE — más pequeño SOLO en celular
-   ========================================== */
 
-@media (max-width: 700px) {
-  .mini-cassette.mini-cassette-real {
-    width: 138px !important;
-    padding: 6px 6px 5px !important;
-    border-radius: 8px !important;
+
+/* ==========================================================
+   CELULARES MUY BAJOS
+   ========================================================== */
+
+@media (max-width: 760px) and (max-height: 680px) {
+
+  #memories,
+  #little-things {
+    padding-top: 39px !important;
+    padding-bottom: 52px !important;
   }
 
-  .mini-cassette__label {
-    padding: 6px !important;
+  #memories > .text-center,
+  #little-things > .text-center {
+    margin-bottom: 5px !important;
   }
 
-  .mini-cassette__title {
-    font-size: 9px !important;
+  #memories > .grid > .deckled-paper > div[class*="h-56"] {
+    height: clamp(82px, 13dvh, 100px) !important;
   }
 
-  .mini-cassette__artist {
+  #memories > .grid > .deckled-paper p {
+    font-size: 11px !important;
+  }
+
+  #little-things .note-card {
+    padding: 8px 7px 7px !important;
+  }
+
+  #little-things .note-card > p:first-of-type {
+    font-size: 16px !important;
+  }
+
+  #little-things .note-card > p:nth-of-type(2) {
     font-size: 8px !important;
-  }
-
-  .mini-cassette__window {
-    min-height: 43px !important;
-  }
-
-  .mini-cassette button {
-    transform: scale(.82);
-    transform-origin: center;
-  }
-
-  .cassette-sync-button {
-    font-size: 5px !important;
-    padding: 2px 4px !important;
   }
 }
