@@ -649,14 +649,20 @@ let isPlaying = false;
       // la hoja sale hacia el centro y NO cambia de centro después.
       loveEnvelope.classList.add('is-open');
 
-      // Superpowers empieza junto con la apertura.
-      ensureBeatFlowers();
-      startMusicWithLetter();
+      /*
+        Primero dejamos arrancar la animación visual.
+        El audio entra unos milisegundos después para que la creación
+        del analizador no compita con los primeros frames de la carta.
+      */
+      window.setTimeout(() => {
+        ensureBeatFlowers();
+        startMusicWithLetter();
+      }, 70);
 
       flowerBurst(
         rect.left + rect.width / 2,
         rect.top + rect.height * .47,
-        24,
+        12,
         true
       );
 
@@ -664,10 +670,10 @@ let isPlaying = false;
         flowerBurst(
           rect.left + rect.width / 2,
           rect.top + rect.height * .30,
-          12,
+          7,
           true
         );
-      }, 430);
+      }, 390);
 
       // Un pequeño acabado con GSAP; nunca reposiciona la carta.
       if (window.gsap) {
@@ -690,25 +696,18 @@ let isPlaying = false;
           });
         }
 
-        if (letter) {
-          gsap.fromTo(
-            letter,
-            { filter: 'brightness(.98)' },
-            {
-              filter: 'brightness(1)',
-              duration: .7,
-              delay: .6,
-              ease: 'power2.out'
-            }
-          );
-        }
+        /*
+          La hoja ya se anima solamente con transform/opacity en CSS.
+          No aplicamos filtros durante el movimiento porque fuerzan
+          repintados y se sienten como lag en algunos navegadores.
+        */
       }
 
       // Después de que la hoja llegó al centro,
       // solo desaparecen las piezas del sobre.
       setTimeout(() => {
         loveEnvelope.classList.add('letter-only');
-      }, 1120);
+      }, 820);
 
       triggerSecretToast('para vos ♡');
     }
@@ -1034,7 +1033,7 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ----------------------------------------------------------
      CASETE ARRASTRABLE — FÍSICA GPU / MÁS PESADA
      ---------------------------------------------------------- */
-  const CASSETTE_POS_KEY = 'maye-mini-cassette-position-v3';
+  const CASSETTE_POS_KEY = 'maye-mini-cassette-position-v4';
 
   let cassetteDragging = false;
   let cassetteMoved = false;
@@ -1642,12 +1641,27 @@ document.addEventListener('DOMContentLoaded', () => {
         await loveSong.play();
         updateLyrics();
 
+        /*
+          Nunca escalamos el casete completo.
+          Un pequeño pulso se aplica solo a la etiqueta interna,
+          por lo que el tamaño/hitbox del casete no cambia.
+        */
         if (window.gsap) {
-          gsap.fromTo(
-            miniCassette,
-            { scale: .96 },
-            { scale: 1, duration: .35, ease: 'back.out(2)' }
-          );
+          const face =
+            miniCassette.querySelector('.mini-cassette__label');
+
+          if (face) {
+            gsap.fromTo(
+              face,
+              { scale: .985 },
+              {
+                scale: 1,
+                duration: .28,
+                ease: 'power1.out',
+                overwrite: 'auto'
+              }
+            );
+          }
         }
       } catch (error) {
         triggerSecretToast('falta DanielCaesar-Superpowers.mp3 ♡');
@@ -1669,8 +1683,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Mejora ligera de transición de secciones con GSAP, sin cambiar su diseño.
   romanticSections?.forEach(section => {
-    section.addEventListener('transitionend', () => {
-      if (!section.classList.contains('section-active') || !window.gsap) return;
+    section.addEventListener('transitionend', event => {
+      /*
+        transitionend también sube desde los hijos.
+        Antes, cada transición del sobre/carta/sello volvía a
+        animar TODA la sección y producía ese efecto de lag.
+      */
+      if (event.target !== section) return;
+
+      if (
+        !section.classList.contains('section-active') ||
+        !window.gsap
+      ) {
+        return;
+      }
 
       const content = [...section.children].filter(el =>
         !el.classList.contains('section-flower')
@@ -1678,13 +1704,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
       gsap.fromTo(
         content,
-        { opacity: .6, y: 12 },
+        { opacity: .78, y: 7 },
         {
           opacity: 1,
           y: 0,
-          duration: .5,
-          stagger: .04,
-          ease: 'power2.out',
+          duration: .32,
+          stagger: .025,
+          ease: 'power1.out',
           overwrite: true
         }
       );

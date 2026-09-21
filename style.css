@@ -2671,11 +2671,7 @@
   pointer-events: none !important;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .mini-cassette {
-    transform: none !important;
-  }
-}
+
 
 
 /* ==========================================================
@@ -4093,5 +4089,262 @@
   #letter .deckled-paper:hover {
     transform: rotate(1deg) !important;
     filter: none !important;
+  }
+}
+
+/* ==========================================================
+   V32 — APERTURA FLUIDA + CASETE DE TAMAÑO FIJO
+   NO MODIFICA PÁGINA 6 NI PÁGINA 7
+   ========================================================== */
+
+
+/* ==========================================================
+   CASETE
+   Una sola escala desde el primer frame hasta el último.
+   ========================================================== */
+
+.mini-cassette.mini-cassette-real {
+  /*
+    Este es el tamaño visual definitivo en TODAS las pantallas.
+    JS lee exactamente la misma variable para su hitbox.
+  */
+  --cassette-ui-scale: .68 !important;
+
+  width: 205px !important;
+  max-width: none !important;
+
+  zoom: 1 !important;
+  scale: none !important;
+
+  transform-origin: top left !important;
+
+  /*
+    Antes de que JS tome control, ya se dibuja con la escala final.
+    Por eso nunca existe un frame donde aparece grande.
+  */
+  transform: scale(var(--cassette-ui-scale));
+
+  will-change: transform;
+}
+
+/*
+  V31 lo mantiene oculto hasta inicializar.
+  Cuando aparece, YA tiene la escala definitiva.
+*/
+.mini-cassette {
+  visibility: hidden;
+}
+
+.mini-cassette.is-ready {
+  visibility: visible;
+}
+
+
+/* ==========================================================
+   SOBRE / CARTA DE APERTURA
+   Una sola geometría. Solo transform + opacity se animan.
+   ========================================================== */
+
+/*
+  El contenedor NO cambia de tamaño cuando pasa a letter-only.
+  Así no existe un reflow a mitad de la animación.
+*/
+#opening .love-envelope,
+#opening .love-envelope.letter-only {
+  width:
+    min(
+      88vw,
+      470px,
+      calc((100dvh - 145px) * 1.55)
+    )
+    !important;
+
+  height: auto !important;
+  aspect-ratio: 1.55 / 1 !important;
+
+  margin: 0 !important;
+
+  transform: none !important;
+}
+
+
+/*
+  La hoja utiliza su geometría FINAL desde antes de abrirse.
+  Cerrada simplemente está más abajo y transparente.
+*/
+#opening .env-letter {
+  position: absolute !important;
+
+  left: 50% !important;
+  right: auto !important;
+  top: 50% !important;
+  bottom: auto !important;
+
+  width: min(610px, calc(100vw - 42px)) !important;
+
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: min(455px, calc(100dvh - 135px)) !important;
+
+  box-sizing: border-box !important;
+
+  opacity: 0 !important;
+
+  transform:
+    translate3d(-50%, -18%, 0)
+    scale(.985)
+    !important;
+
+  transform-origin: center center !important;
+
+  /*
+    Nada de width/height/filter/box-shadow durante el movimiento.
+    Esas propiedades eran las que más trabajo provocaban.
+  */
+  transition:
+    transform .72s cubic-bezier(.2,.78,.2,1),
+    opacity .18s ease
+    !important;
+
+  will-change: transform, opacity;
+
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+
+  filter: none !important;
+}
+
+
+/*
+  is-open y letter-only comparten EXACTAMENTE la misma posición.
+  Cuando desaparece el sobre la hoja NO vuelve a moverse.
+*/
+#opening .love-envelope.is-open .env-letter,
+#opening .love-envelope.letter-only .env-letter {
+  position: absolute !important;
+
+  left: 50% !important;
+  right: auto !important;
+  top: 50% !important;
+  bottom: auto !important;
+
+  width: min(610px, calc(100vw - 42px)) !important;
+
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: min(455px, calc(100dvh - 135px)) !important;
+
+  margin: 0 !important;
+
+  opacity: 1 !important;
+
+  transform:
+    translate3d(-50%, -50%, 0)
+    scale(1)
+    !important;
+
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+
+  box-shadow: 0 15px 30px rgba(61,46,43,.12) !important;
+
+  scrollbar-width: none !important;
+}
+
+#opening .love-envelope.is-open .env-letter::-webkit-scrollbar,
+#opening .love-envelope.letter-only .env-letter::-webkit-scrollbar {
+  display: none !important;
+}
+
+
+/*
+  El texto aparece después de que la hoja ya recorrió buena parte
+  de su camino. No mueve el papel.
+*/
+#opening .env-letter-content {
+  opacity: 0 !important;
+
+  transform: translate3d(0, 7px, 0) !important;
+
+  transition:
+    opacity .30s ease .34s,
+    transform .30s ease .34s
+    !important;
+
+  will-change: opacity, transform;
+}
+
+#opening .love-envelope.is-open .env-letter-content,
+#opening .love-envelope.letter-only .env-letter-content {
+  opacity: 1 !important;
+  transform: translate3d(0, 0, 0) !important;
+}
+
+
+/* El flap sigue abriendo, pero con una transición más corta y limpia. */
+#opening .env-flap {
+  transition:
+    transform .64s cubic-bezier(.2,.75,.18,1),
+    opacity .20s ease
+    !important;
+}
+
+
+/* Hover visual sin mover el sobre. */
+#opening .love-envelope:not(.is-open):hover {
+  transform: none !important;
+}
+
+
+/* ==========================================================
+   MÓVIL
+   Mismo movimiento; solo ajusta tipografía/padding para caber.
+   ========================================================== */
+
+@media (max-width: 640px) {
+
+  #opening .env-letter,
+  #opening .love-envelope.is-open .env-letter,
+  #opening .love-envelope.letter-only .env-letter {
+    width: min(92vw, 610px) !important;
+
+    height: auto !important;
+
+    max-height: calc(100dvh - 118px) !important;
+
+    padding:
+      clamp(17px, 4.6vw, 23px)
+      clamp(17px, 5.2vw, 22px)
+      clamp(16px, 4.5vw, 22px)
+      !important;
+  }
+
+  #opening .env-letter-text {
+    font-size:
+      clamp(
+        12px,
+        min(3.8vw, 2.05dvh),
+        15px
+      )
+      !important;
+
+    line-height: 1.42 !important;
+  }
+
+  #opening .env-letter-text p {
+    margin-bottom: clamp(7px, 1.3dvh, 10px) !important;
+  }
+}
+
+
+/* Si el usuario prefiere menos movimiento, conservamos el tamaño. */
+@media (prefers-reduced-motion: reduce) {
+
+  .mini-cassette.mini-cassette-real {
+    transform: scale(var(--cassette-ui-scale));
+  }
+
+  #opening .env-letter {
+    transition-duration: .01ms !important;
   }
 }
