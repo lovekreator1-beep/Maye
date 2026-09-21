@@ -4021,3 +4021,77 @@
     --cassette-ui-scale: .72;
   }
 }
+
+/* ==========================================================
+   V31 — CASETE MISMO TAMAÑO DESDE EL PRIMER FRAME
+          + CARTAS SIN SALTO AL HOVER
+   ========================================================== */
+
+/*
+  El casete permanece invisible solamente durante los pocos ms
+  en que JS calcula su posición/escala real.
+  Así nunca se ve primero grande y después pequeño.
+*/
+.mini-cassette {
+  visibility: hidden;
+}
+
+.mini-cassette.is-ready {
+  visibility: visible;
+}
+
+
+/* ----------------------------------------------------------
+   SOBRE DE LA PÁGINA 1
+   Antes el hover movía todo el elemento hacia arriba.
+   Si el cursor quedaba justo en el borde podía entrar/salir
+   del :hover repetidamente y parecía que "saltaba".
+   ---------------------------------------------------------- */
+
+.love-envelope:not(.is-open):hover {
+  transform: none !important;
+
+  filter:
+    drop-shadow(0 20px 30px rgba(80, 54, 44, .18))
+    !important;
+}
+
+
+/* ----------------------------------------------------------
+   CARTA DE LA PÁGINA 4
+   Mantiene su inclinación artesanal.
+   El hover ya no cambia su geometría.
+   ---------------------------------------------------------- */
+
+#letter .deckled-paper {
+  transform: rotate(1deg) !important;
+
+  transition:
+    box-shadow .28s ease,
+    filter .28s ease
+    !important;
+}
+
+#letter .deckled-paper:hover {
+  transform: rotate(1deg) !important;
+
+  box-shadow:
+    0 14px 30px rgba(61,46,43,.12)
+    !important;
+
+  filter: brightness(1.01);
+}
+
+
+/* En dispositivos táctiles no hay motivo para simular hover. */
+@media (hover: none), (pointer: coarse) {
+  .love-envelope:not(.is-open):hover {
+    transform: none !important;
+  }
+
+  #letter .deckled-paper,
+  #letter .deckled-paper:hover {
+    transform: rotate(1deg) !important;
+    filter: none !important;
+  }
+}

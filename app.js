@@ -1363,6 +1363,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   restoreCassettePosition();
 
+  /*
+    El casete ya tiene aquí su escala y posición finales.
+    Lo mostramos recién ahora para evitar el flash grande
+    del primer frame.
+  */
+  miniCassette.classList.add('is-ready');
+
   miniCassette.addEventListener(
     'pointerdown',
     event => {
@@ -1539,15 +1546,24 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
 
-  // Entrada suave con GSAP.
+  /*
+    Entrada del casete:
+    SOLO cambia opacidad.
+    Nunca modifica transform, scale, x ni y porque esos valores
+    pertenecen exclusivamente al sistema de física.
+  */
   if (window.gsap) {
+    gsap.killTweensOf(miniCassette);
+
+    gsap.set(miniCassette, {
+      opacity: 0
+    });
+
     gsap.to(miniCassette, {
       opacity: 1,
-      y: 0,
-      scale: 1,
-      duration: .85,
-      delay: .35,
-      ease: 'power3.out'
+      duration: .42,
+      delay: .08,
+      ease: 'power1.out'
     });
 
     const cassetteFace =
@@ -1579,8 +1595,11 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
   } else {
+    /*
+      Sin GSAP simplemente aparece.
+      No tocamos transform porque ahí vive la escala/posición.
+    */
     miniCassette.style.opacity = '1';
-    miniCassette.style.transform = 'none';
   }
 
   function formatTime(value) {
