@@ -4460,3 +4460,525 @@
       !important;
   }
 }
+
+/* ==========================================================
+   V34 — SOBRE MÁS REALISTA
+   SOLO MEJORA VISUAL.
+   NO CAMBIA LA GEOMETRÍA NI LA LÓGICA DE APERTURA.
+   ========================================================== */
+
+
+/* ----------------------------------------------------------
+   SOMBRA DE CONTACTO
+   Hace que el sobre parezca apoyado sobre el papel.
+   ---------------------------------------------------------- */
+
+#opening .love-envelope::before {
+  content: "";
+  position: absolute;
+
+  left: 7%;
+  right: 7%;
+  bottom: -12px;
+
+  height: 24px;
+
+  z-index: 0;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      ellipse at center,
+      rgba(69, 43, 35, .18) 0%,
+      rgba(69, 43, 35, .09) 38%,
+      rgba(69, 43, 35, 0) 74%
+    );
+
+  filter: blur(6px);
+
+  pointer-events: none;
+}
+
+
+/* ----------------------------------------------------------
+   CUERPO DEL SOBRE
+   Papel cálido con fibras y sombreado muy sutil.
+   ---------------------------------------------------------- */
+
+#opening .env-back {
+  border:
+    1px solid
+    rgba(178, 145, 111, .38)
+    !important;
+
+  border-radius:
+    6px 6px 13px 13px
+    !important;
+
+  background:
+    radial-gradient(
+      circle at 14% 17%,
+      rgba(255,255,255,.45) 0 1px,
+      transparent 1.2px
+    ),
+    radial-gradient(
+      circle at 73% 59%,
+      rgba(170,130,96,.08) 0 .65px,
+      transparent .9px
+    ),
+    linear-gradient(
+      118deg,
+      rgba(255,255,255,.24),
+      transparent 31%
+    ),
+    linear-gradient(
+      180deg,
+      #f8eddf 0%,
+      #f2dfca 58%,
+      #ecd5bb 100%
+    )
+    !important;
+
+  background-size:
+    22px 22px,
+    17px 17px,
+    auto,
+    auto
+    !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.72),
+    inset 0 -9px 18px rgba(137,95,62,.055),
+    0 1px 0 rgba(255,255,255,.45)
+    !important;
+}
+
+
+/* Luz tenue en la parte superior del papel */
+#opening .env-back::after {
+  content: "";
+  position: absolute;
+
+  inset: 1px 1px auto;
+  height: 34%;
+
+  border-radius: 6px 6px 48% 48% / 6px 6px 20% 20%;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.23),
+      rgba(255,255,255,0)
+    );
+
+  pointer-events: none;
+}
+
+
+/* ----------------------------------------------------------
+   SOLAPA SUPERIOR
+   Más volumen y pliegue central.
+   ---------------------------------------------------------- */
+
+#opening .env-flap-front {
+  background:
+    linear-gradient(
+      168deg,
+      rgba(255,255,255,.48) 0%,
+      rgba(255,255,255,.08) 35%,
+      transparent 36%
+    ),
+    linear-gradient(
+      155deg,
+      #f8ecde 0%,
+      #f1dfca 52%,
+      #e8cfb3 100%
+    )
+    !important;
+
+  border-top:
+    1px solid rgba(177,143,108,.30)
+    !important;
+
+  filter:
+    drop-shadow(0 3px 2px rgba(81,55,43,.045));
+}
+
+#opening .env-flap-front::after {
+  content: "";
+  position: absolute;
+
+  left: 16%;
+  right: 16%;
+  top: 3px;
+
+  height: 1px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(153,115,86,.12),
+      transparent
+    );
+
+  opacity: .72;
+}
+
+#opening .env-flap-back {
+  background:
+    linear-gradient(
+      180deg,
+      #ead2b9 0%,
+      #dfc1a2 100%
+    )
+    !important;
+
+  box-shadow:
+    inset 0 -8px 14px rgba(113,77,53,.07)
+    !important;
+}
+
+
+/* ----------------------------------------------------------
+   PLIEGUES LATERALES
+   Mantienen la misma geometría, solo ganan profundidad.
+   ---------------------------------------------------------- */
+
+#opening .env-front::before {
+  background:
+    linear-gradient(
+      145deg,
+      #ead4bc 0%,
+      #f3e4d3 47%,
+      #f7ebde 100%
+    )
+    !important;
+
+  border-top:
+    1px solid rgba(153,112,82,.12)
+    !important;
+
+  box-shadow:
+    inset -7px 0 14px rgba(113,78,53,.025)
+    !important;
+}
+
+#opening .env-front::after {
+  background:
+    linear-gradient(
+      215deg,
+      #e7cfb5 0%,
+      #f2e1cf 48%,
+      #f8ecdf 100%
+    )
+    !important;
+
+  border-top:
+    1px solid rgba(153,112,82,.12)
+    !important;
+
+  box-shadow:
+    inset 7px 0 14px rgba(113,78,53,.025)
+    !important;
+}
+
+
+/* Pliegue inferior con centro un poco más cálido */
+#opening .env-bottom {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.18),
+      transparent 18%
+    ),
+    linear-gradient(
+      180deg,
+      #f4e4d1 0%,
+      #ecd4ba 100%
+    )
+    !important;
+
+  box-shadow:
+    inset 0 -10px 17px rgba(107,71,47,.04),
+    inset 0 1px 0 rgba(255,255,255,.34)
+    !important;
+}
+
+
+/* Línea central casi invisible: da la sensación de papel plegado */
+#opening .env-bottom::after {
+  content: "";
+  position: absolute;
+
+  left: 50%;
+  top: 3%;
+  bottom: 5%;
+
+  width: 1px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(137,97,69,.11),
+      rgba(137,97,69,.025) 55%,
+      transparent
+    );
+
+  transform: translateX(-50%);
+
+  opacity: .55;
+}
+
+
+/* ----------------------------------------------------------
+   SELLO DE CERA
+   Irregular, brillante y con relieve.
+   ---------------------------------------------------------- */
+
+#opening .env-seal {
+  width: 61px !important;
+
+  border:
+    1px solid rgba(88,28,43,.54)
+    !important;
+
+  border-radius:
+    47% 53% 49% 51% /
+    52% 47% 53% 48%
+    !important;
+
+  color:
+    #f7dfdc
+    !important;
+
+  background:
+    radial-gradient(
+      circle at 34% 25%,
+      rgba(255,255,255,.26) 0 7%,
+      rgba(255,255,255,.07) 8% 16%,
+      transparent 17%
+    ),
+    radial-gradient(
+      circle at 62% 68%,
+      rgba(71,13,28,.25),
+      transparent 48%
+    ),
+    linear-gradient(
+      145deg,
+      #a2475d 0%,
+      #8c354b 40%,
+      #74293d 100%
+    )
+    !important;
+
+  box-shadow:
+    0 7px 12px rgba(83,28,40,.22),
+    0 2px 3px rgba(83,28,40,.20),
+    inset 2px 2px 5px rgba(255,255,255,.18),
+    inset -4px -5px 8px rgba(62,14,28,.19)
+    !important;
+
+  text-shadow:
+    0 1px 0 rgba(255,255,255,.20),
+    0 -1px 1px rgba(69,17,30,.24)
+    !important;
+}
+
+
+/* Borde hundido alrededor del símbolo */
+#opening .env-seal::before {
+  content: "";
+  position: absolute;
+
+  inset: 9px;
+
+  border:
+    1px solid rgba(244,209,209,.26);
+
+  border-radius:
+    48% 52% 46% 54% /
+    55% 47% 53% 45%;
+
+  box-shadow:
+    inset 0 1px 2px rgba(63,15,28,.22),
+    0 1px 0 rgba(255,255,255,.08);
+
+  pointer-events: none;
+}
+
+
+/* Reflejo pequeño de cera */
+#opening .env-seal::after {
+  content: "";
+  position: absolute;
+
+  left: 15px;
+  top: 10px;
+
+  width: 14px;
+  height: 7px;
+
+  border-radius: 999px;
+
+  background:
+    rgba(255,255,255,.18);
+
+  transform: rotate(-25deg);
+
+  filter: blur(.3px);
+
+  pointer-events: none;
+}
+
+
+/* Hover únicamente visual: el sobre NO cambia de posición */
+@media (hover: hover) and (pointer: fine) {
+  #opening .love-envelope:not(.is-open):hover .env-seal {
+    box-shadow:
+      0 8px 14px rgba(83,28,40,.25),
+      0 2px 3px rgba(83,28,40,.20),
+      inset 2px 2px 5px rgba(255,255,255,.20),
+      inset -4px -5px 8px rgba(62,14,28,.20)
+      !important;
+  }
+}
+
+
+/* ----------------------------------------------------------
+   RAMITA DECORATIVA
+   Más integrada al sobre, sin cambiar su movimiento.
+   ---------------------------------------------------------- */
+
+#opening .env-sprig {
+  filter:
+    drop-shadow(0 2px 2px rgba(67,76,55,.12));
+
+  opacity: .88;
+}
+
+
+/* ----------------------------------------------------------
+   TEXTO "TOCÁ EL SELLO"
+   Más delicado y relacionado visualmente al sobre.
+   ---------------------------------------------------------- */
+
+#opening .env-hint {
+  color:
+    #8c6b66
+    !important;
+
+  font-size:
+    clamp(15px, 2.2vw, 18px)
+    !important;
+
+  letter-spacing:
+    .025em;
+
+  text-shadow:
+    0 1px 0 rgba(255,255,255,.72);
+}
+
+#opening .env-hint::before,
+#opening .env-hint::after {
+  content: "·";
+  display: inline-block;
+
+  margin:
+    0 7px;
+
+  color:
+    rgba(126,56,69,.42);
+
+  font-family:
+    "Cormorant Garamond", serif;
+}
+
+
+/* ----------------------------------------------------------
+   HOJA INTERIOR
+   Solo textura visual. Su posición sigue controlada por V33.
+   ---------------------------------------------------------- */
+
+#opening .env-letter {
+  border:
+    1px solid rgba(186,157,128,.34)
+    !important;
+
+  border-radius:
+    2px 4px 3px 3px
+    !important;
+
+  background:
+    radial-gradient(
+      circle at 18% 24%,
+      rgba(169,135,103,.055) 0 .65px,
+      transparent .9px
+    ),
+    radial-gradient(
+      circle at 73% 64%,
+      rgba(169,135,103,.04) 0 .55px,
+      transparent .82px
+    ),
+    linear-gradient(
+      113deg,
+      rgba(255,255,255,.48),
+      transparent 26%
+    ),
+    #fffdf7
+    !important;
+
+  background-size:
+    19px 19px,
+    23px 23px,
+    auto,
+    auto
+    !important;
+}
+
+
+/*
+  Muy pequeño sombreado de borde que simula una hoja fina.
+  No anima ni altera dimensiones.
+*/
+#opening .env-letter::after {
+  content: "";
+  position: absolute;
+
+  inset: 0;
+
+  border-radius: inherit;
+
+  box-shadow:
+    inset 0 0 18px rgba(123,92,65,.035),
+    inset 0 1px 0 rgba(255,255,255,.78);
+
+  pointer-events: none;
+}
+
+
+/* ==========================================================
+   MÓVIL
+   El sello conserva presencia sin comerse el sobre.
+   ========================================================== */
+
+@media (max-width: 640px) {
+
+  #opening .env-seal {
+    width:
+      clamp(48px, 14.5vw, 57px)
+      !important;
+  }
+
+  #opening .env-seal::before {
+    inset:
+      clamp(7px, 2.2vw, 9px);
+  }
+
+  #opening .env-hint {
+    bottom:
+      clamp(-46px, -6.5dvh, -38px)
+      !important;
+  }
+}
