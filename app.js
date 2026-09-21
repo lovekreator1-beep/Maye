@@ -1034,7 +1034,7 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ----------------------------------------------------------
      CASETE ARRASTRABLE — FÍSICA GPU / MÁS PESADA
      ---------------------------------------------------------- */
-  const CASSETTE_POS_KEY = 'maye-mini-cassette-position-v2';
+  const CASSETTE_POS_KEY = 'maye-mini-cassette-position-v3';
 
   let cassetteDragging = false;
   let cassetteMoved = false;
@@ -1062,15 +1062,28 @@ document.addEventListener('DOMContentLoaded', () => {
   let cassettePhysicsFrame = null;
   let cassettePhysicsMode = 'idle';
 
-  function getCassetteSize() {
-    // Tamaño visual real del cassette.
-    // CSS zoom reduce el objeto completo y estas medidas
-    // mantienen correctos los límites del arrastre.
-    const rect = miniCassette.getBoundingClientRect();
+  function getCassetteUIScale() {
+    const value = parseFloat(
+      getComputedStyle(miniCassette)
+        .getPropertyValue('--cassette-ui-scale')
+    );
 
+    return Number.isFinite(value) && value > 0
+      ? value
+      : 1;
+  }
+
+  function getCassetteSize() {
+    const uiScale = getCassetteUIScale();
+
+    /*
+      Usamos el tamaño de layout × escala visual.
+      Así la caja física coincide siempre con el casete visible,
+      sin depender de una rotación temporal.
+    */
     return {
-      width: rect.width,
-      height: rect.height
+      width: miniCassette.offsetWidth * uiScale,
+      height: miniCassette.offsetHeight * uiScale
     };
   }
 
@@ -1123,19 +1136,25 @@ document.addEventListener('DOMContentLoaded', () => {
     absoluteX,
     absoluteY,
     rotation = 0,
-    scale = 1
+    microScale = 1
   ) {
     /*
-      left/top quedan quietos.
-      El movimiento visible ocurre únicamente con translate3d,
-      mucho más barato para el navegador.
+      La escala visual y el movimiento viven en EL MISMO transform.
+      Con transform-origin arriba/izquierda:
+      - left/top = esquina visual del casete
+      - translate = píxeles reales de pantalla
+      - la hitbox coincide con lo que ves
     */
     const tx = absoluteX - cassetteBaseX;
     const ty = absoluteY - cassetteBaseY;
+    const uiScale = getCassetteUIScale();
+
+    miniCassette.style.transformOrigin = 'top left';
 
     miniCassette.style.transform =
       `translate3d(${tx}px, ${ty}px, 0) ` +
-      `rotate(${rotation}deg) scale(${scale})`;
+      `rotate(${rotation}deg) ` +
+      `scale(${uiScale * microScale})`;
   }
 
   function commitCassettePosition(x, y) {
@@ -1148,8 +1167,12 @@ document.addEventListener('DOMContentLoaded', () => {
     cassetteTargetX = safe.x;
     cassetteTargetY = safe.y;
 
-    miniCassette.style.transform =
-      'translate3d(0,0,0) rotate(0deg) scale(1)';
+    renderCassette(
+      safe.x,
+      safe.y,
+      0,
+      1
+    );
   }
 
   function saveCassettePosition() {
@@ -1181,6 +1204,14 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
     } catch (error) {}
+
+    /*
+      Primero aplicamos la escala correcta en su posición CSS
+      inicial (right/bottom), luego leemos esa posición visual.
+    */
+    miniCassette.style.transformOrigin = 'top left';
+    miniCassette.style.transform =
+      `scale(${getCassetteUIScale()})`;
 
     const rect = miniCassette.getBoundingClientRect();
 
@@ -1340,15 +1371,15 @@ document.addEventListener('DOMContentLoaded', () => {
       stopCassettePhysics();
 
       /*
-        Si había una transformación visual pendiente,
-        consolidamos su posición una única vez.
-      */
-      const rect =
-        miniCassette.getBoundingClientRect();
+        NO usamos getBoundingClientRect() acá.
+        Si el casete venía inclinado, ese rect cambia de tamaño
+        y mueve artificialmente su esquina.
 
+        cassetteVisualX/Y ya son la posición física correcta.
+      */
       commitCassettePosition(
-        rect.left,
-        rect.top
+        cassetteVisualX,
+        cassetteVisualY
       );
 
       cassetteDragging = true;
@@ -1446,32 +1477,27 @@ document.addEventListener('DOMContentLoaded', () => {
       event.pointerId
     );
 
-    if (!cassetteMoved) {
-      stopCassettePhysics();
-      settleCassette();
-      return;
-    }
+    /*
+      Al soltar, queda EXACTAMENTE donde lo dejó el dedo/mouse.
+      Conservamos el pequeño acomodo visual de la cara,
+      pero eliminamos el desplazamiento posterior que parecía
+      un hitbox corrido.
+    */
+    stopCassettePhysics();
+
+    const dropped = clampXY(
+      cassetteTargetX,
+      cassetteTargetY
+    );
+
+    cassetteVisualX = dropped.x;
+    cassetteVisualY = dropped.y;
 
     /*
-      Un pequeño "peso":
-      no conserva el 100% de la velocidad de la mano.
+      VX se conserva solo para decidir hacia qué lado hace
+      el micro-balanceo de settleCassette(); ya no mueve posición.
     */
-    cassetteVX *= .72;
-    cassetteVY *= .72;
-
-    cassetteVX = Math.max(
-      -8.5,
-      Math.min(8.5, cassetteVX)
-    );
-
-    cassetteVY = Math.max(
-      -8.5,
-      Math.min(8.5, cassetteVY)
-    );
-
-    cassettePhysicsMode = 'inertia';
-
-    ensureCassettePhysicsLoop();
+    settleCassette();
   }
 
   miniCassette.addEventListener(
