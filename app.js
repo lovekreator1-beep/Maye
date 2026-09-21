@@ -1,5 +1,11 @@
 let isPlaying = false;
     const loveSong = new Audio('DanielCaesar-Superpowers.mp3');
+
+    // Modo ligero para teléfonos/tablets.
+    // Conserva animaciones, pero reduce trabajo innecesario por frame.
+    const MOBILE_LIGHT_MODE = window.matchMedia(
+      '(max-width: 760px), (pointer: coarse)'
+    ).matches;
     loveSong.preload = 'metadata';
 
     // 5% más lenta: suave, sin exagerar.
@@ -308,14 +314,26 @@ let isPlaying = false;
        Este reloj consulta currentTime en cada frame.
        ========================================================== */
     let lyricClockFrame = null;
+    let lastLyricVisualUpdate = 0;
 
-    function lyricClockLoop() {
+    function lyricClockLoop(timestamp = 0) {
       if (loveSong.paused || loveSong.ended) {
         lyricClockFrame = null;
         return;
       }
 
-      updateLyrics();
+      // 30 FPS en móvil es más que suficiente para una letra,
+      // y libera bastante CPU/GPU.
+      const minFrameGap = MOBILE_LIGHT_MODE ? 32 : 0;
+
+      if (
+        !MOBILE_LIGHT_MODE ||
+        timestamp - lastLyricVisualUpdate >= minFrameGap
+      ) {
+        updateLyrics();
+        lastLyricVisualUpdate = timestamp;
+      }
+
       lyricClockFrame = requestAnimationFrame(lyricClockLoop);
     }
 
@@ -384,7 +402,8 @@ let isPlaying = false;
 
     function createPetal() {
       if (!petalContainer) return;
-      if (petalContainer.childElementCount > 20) return;
+      const maxPetals = MOBILE_LIGHT_MODE ? 7 : 20;
+      if (petalContainer.childElementCount >= maxPetals) return;
 
       const petal = document.createElement('div');
       petal.className = 'petal-particle';
@@ -414,11 +433,15 @@ let isPlaying = false;
       }, (duration + delay) * 1000);
     }
 
-    // Spawn initial gentle petals
-    for (let i = 0; i < 8; i++) {
-      setTimeout(createPetal, i * 800);
+    // Menos partículas simultáneas en móvil para conservar FPS.
+    const initialPetals = MOBILE_LIGHT_MODE ? 3 : 8;
+    const petalInterval = MOBILE_LIGHT_MODE ? 3200 : 1650;
+
+    for (let i = 0; i < initialPetals; i++) {
+      setTimeout(createPetal, i * (MOBILE_LIGHT_MODE ? 1100 : 800));
     }
-    setInterval(createPetal, 1650);
+
+    setInterval(createPetal, petalInterval);
 
     // Desktop Custom Cursor Trail
     if (window.matchMedia('(pointer: fine)').matches) {
@@ -697,7 +720,11 @@ let isPlaying = false;
     const bloomSymbols = ['🌸', '🌷', '✿', '❀', '🌹', '💮'];
 
     function flowerBurst(x, y, amount = 8, downward = false) {
-      for (let i = 0; i < amount; i++) {
+      const safeAmount = MOBILE_LIGHT_MODE
+        ? Math.max(2, Math.ceil(amount * .55))
+        : amount;
+
+      for (let i = 0; i < safeAmount; i++) {
         const bloom = document.createElement('span');
         bloom.className = 'click-bloom';
         bloom.textContent = bloomSymbols[Math.floor(Math.random() * bloomSymbols.length)];
@@ -718,8 +745,14 @@ let isPlaying = false;
         bloom.style.setProperty('--bloom-x', `${dx}px`);
         bloom.style.setProperty('--bloom-y', `${dy}px`);
         bloom.style.setProperty('--bloom-rot', `${-150 + Math.random() * 300}deg`);
-        bloom.style.setProperty('--bloom-size', `${13 + Math.random() * 13}px`);
-        bloom.style.setProperty('--bloom-time', `${650 + Math.random() * 480}ms`);
+        bloom.style.setProperty(
+          '--bloom-size',
+          `${MOBILE_LIGHT_MODE ? 11 + Math.random() * 8 : 13 + Math.random() * 13}px`
+        );
+        bloom.style.setProperty(
+          '--bloom-time',
+          `${MOBILE_LIGHT_MODE ? 520 + Math.random() * 300 : 650 + Math.random() * 480}ms`
+        );
 
         document.body.appendChild(bloom);
         bloom.addEventListener('animationend', () => bloom.remove(), { once: true });
@@ -727,7 +760,11 @@ let isPlaying = false;
     }
 
     document.addEventListener('pointerdown', event => {
-      flowerBurst(event.clientX, event.clientY, event.pointerType === 'touch' ? 9 : 7);
+      flowerBurst(
+        event.clientX,
+        event.clientY,
+        event.pointerType === 'touch' ? 5 : 7
+      );
     });
 
 const memoriesLink = document.querySelector('a[href="#memories"]');
@@ -763,6 +800,7 @@ const FLOWER_BEAT_INTERVAL = 60 / FLOWER_BPM;
 const FLOWER_BEAT_OFFSET = 0.10;
 
 let lastFlowerBeatIndex = -1;
+let lastFlowerAnalysisFrame = 0;
 
 function ensureBeatFlowers() {
   try {
@@ -862,7 +900,9 @@ function flowerBeatExplosion(strength = 1, beatIndex = 0) {
 
   // No hacemos 15 flores en CADA beat porque sería demasiado pesado.
   // Hay explosión en todos, pero unas son pequeñas.
-  const amount = strongBeat ? 10 : 5;
+  const amount = MOBILE_LIGHT_MODE
+    ? (strongBeat ? 6 : 3)
+    : (strongBeat ? 10 : 5);
 
   flowerBurst(x, y, amount, false);
 
@@ -878,7 +918,7 @@ function flowerBeatExplosion(strength = 1, beatIndex = 0) {
           window.innerHeight - 28,
           Math.max(28, y + (Math.random() - .5) * 85)
         ),
-        4,
+        MOBILE_LIGHT_MODE ? 2 : 4,
         false
       );
     }, 70);
@@ -911,12 +951,22 @@ function flowerBeatExplosion(strength = 1, beatIndex = 0) {
   }
 }
 
-function monitorFlowerBeatGrid() {
+function monitorFlowerBeatGrid(timestamp = 0) {
   flowerBeatFrame = requestAnimationFrame(monitorFlowerBeatGrid);
 
   if (loveSong.paused || loveSong.ended) {
     return;
   }
+
+  // No hace falta analizar audio 60 veces por segundo en un teléfono.
+  if (
+    MOBILE_LIGHT_MODE &&
+    timestamp - lastFlowerAnalysisFrame < 40
+  ) {
+    return;
+  }
+
+  lastFlowerAnalysisFrame = timestamp;
 
   const songTime = loveSong.currentTime - FLOWER_BEAT_OFFSET;
 
